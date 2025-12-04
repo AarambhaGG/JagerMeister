@@ -1,22 +1,16 @@
-// ============================================
-// JÄGERMEISTER - MESMERIZING SCROLL ANIMATIONS
-// ============================================
 
-// Initialize all website functionality when DOM is ready
+
 document.addEventListener('DOMContentLoaded', () => {
-    initCustomCursor();        // Custom mouse cursor effects
-    initScrollProgress();      // Top progress bar
-    initScrollAnimations();    // Fade-in animations on scroll
-    initSectionReveal();       // Section appearance animations
-    initSmoothSectionScroll(); // Wheel and keyboard navigation
-    initParallaxVideos();      // Subtle video parallax effects
-    initNavigation();          // Smooth anchor link scrolling
-    initVideoControl();        // Auto-play/pause videos on scroll
+    initCustomCursor();       
+    initScrollProgress();     
+    initScrollAnimations();    
+    initSectionReveal();       
+    initSmoothSectionScroll(); 
+    initParallaxVideos();      
+    initNavigation();          
+    initVideoControl();        
 });
 
-// ============================================
-// CUSTOM CURSOR - Smooth following cursor effect
-// ============================================
 
 function initCustomCursor() {
     const cursor = document.querySelector('.cursor');
@@ -72,9 +66,7 @@ let mouseX = 0, mouseY = 0;
     });
 }
 
-// ============================================
-// SCROLL PROGRESS BAR - Visual progress indicator at top
-// ============================================
+
 
 function initScrollProgress() {
     const progressBar = document.querySelector('.scroll-progress');
@@ -94,9 +86,7 @@ function initScrollProgress() {
     }, { passive: true });
 }
 
-// ============================================
-// ELEMENT SCROLL ANIMATIONS - Unified fade-in system for all sections
-// ============================================
+
 
 function initScrollAnimations() {
     const animatedElements = document.querySelectorAll('[data-animate]');
@@ -115,9 +105,7 @@ function initScrollAnimations() {
     animatedElements.forEach(el => observer.observe(el));
 }
 
-// ============================================
-// SECTION REVEAL ANIMATION
-// ============================================
+
 
 function initSectionReveal() {
     const sections = document.querySelectorAll('.product-section-video, .product-section-split');
@@ -125,7 +113,6 @@ function initSectionReveal() {
     const sectionObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                // Delay the reveal for dramatic effect
                 setTimeout(() => {
                     entry.target.classList.add('section-visible');
                 }, 200);
@@ -139,9 +126,7 @@ function initSectionReveal() {
     sections.forEach(section => sectionObserver.observe(section));
 }
 
-// ============================================
-// SMOOTH SECTION-BY-SECTION SCROLLING - Wheel and keyboard navigation
-// ============================================
+
 
 function initSmoothSectionScroll() {
     const sections = document.querySelectorAll('.hero, .product-section-video, .product-section-split, .footer');
@@ -149,7 +134,6 @@ function initSmoothSectionScroll() {
     let isScrolling = false;
     let scrollTimeout;
     
-    // Track which section is currently most visible
     const updateCurrentSection = () => {
         sections.forEach((section, index) => {
             const rect = section.getBoundingClientRect();
@@ -159,14 +143,12 @@ function initSmoothSectionScroll() {
         });
     };
     
-    // Smooth scroll to section with easing
     const scrollToSection = (index) => {
         if (index < 0 || index >= sections.length) return;
         
         isScrolling = true;
         const target = sections[index];
     
-        // Animate content out before transition
         const currentContent = sections[currentSection];
         if (currentContent) {
             const elements = currentContent.querySelectorAll('[data-animate]');
@@ -176,13 +158,12 @@ function initSmoothSectionScroll() {
             });
         }
 
-        // Scroll to target
+        
         target.scrollIntoView({
             behavior: 'smooth',
             block: 'start'
         });
 
-        // Animate content in after transition
         setTimeout(() => {
             const newElements = target.querySelectorAll('[data-animate]');
             newElements.forEach((el, i) => {
@@ -197,24 +178,19 @@ function initSmoothSectionScroll() {
         }, 600);
     };
     
-    // Wheel event for controlled scrolling
     let wheelAccumulator = 0;
     const wheelThreshold = 50;
     
     window.addEventListener('wheel', (e) => {
-        // Update current section
         updateCurrentSection();
         
-        // Accumulate wheel delta
         wheelAccumulator += e.deltaY;
         
-        // Clear accumulator after pause
         clearTimeout(scrollTimeout);
         scrollTimeout = setTimeout(() => {
             wheelAccumulator = 0;
         }, 150);
         
-        // Only trigger section change when threshold is met
         if (!isScrolling && Math.abs(wheelAccumulator) > wheelThreshold) {
             if (wheelAccumulator > 0 && currentSection < sections.length - 1) {
                 scrollToSection(currentSection + 1);
@@ -226,7 +202,6 @@ function initSmoothSectionScroll() {
         }
     }, { passive: true });
         
-    // Keyboard navigation
     window.addEventListener('keydown', (e) => {
         updateCurrentSection();
         
@@ -241,7 +216,6 @@ function initSmoothSectionScroll() {
         }
     });
     
-    // Touch support for mobile
     let touchStartY = 0;
     let touchEndY = 0;
     
@@ -264,13 +238,10 @@ function initSmoothSectionScroll() {
         }
     }, { passive: true });
     
-    // Section indicator dots
     createSectionIndicator(sections);
 }
 
-// ============================================
-// SECTION INDICATOR DOTS
-// ============================================
+
 
 function createSectionIndicator(sections) {
     const indicator = document.createElement('div');
@@ -280,7 +251,6 @@ function createSectionIndicator(sections) {
     ).join('');
     document.body.appendChild(indicator);
     
-    // Style the indicator
     const style = document.createElement('style');
     style.textContent = `
         .section-indicator {
@@ -329,7 +299,6 @@ function createSectionIndicator(sections) {
     `;
     document.head.appendChild(style);
     
-    // Click to navigate
     document.querySelectorAll('.indicator-dot').forEach(dot => {
         dot.addEventListener('click', () => {
             const index = parseInt(dot.dataset.section);
@@ -337,7 +306,6 @@ function createSectionIndicator(sections) {
         });
     });
     
-    // Update active dot on scroll
     const updateIndicator = () => {
         sections.forEach((section, index) => {
             const rect = section.getBoundingClientRect();
@@ -352,13 +320,8 @@ function createSectionIndicator(sections) {
     window.addEventListener('scroll', updateIndicator, { passive: true });
 }
 
-// ============================================
-// ============================================
-// PARALLAX VIDEO EFFECTS - Subtle depth movement on scroll
-// ============================================
 
 function initParallaxVideos() {
-    // Optimized parallax only on videos, not images
     const videoSections = document.querySelectorAll('.product-section-split, .product-section-video');
     let ticking = false;
 
@@ -384,9 +347,7 @@ function initParallaxVideos() {
     }, { passive: true });
 }
 
-// ============================================
-// NAVIGATION - Smooth anchor link scrolling
-// ============================================
+
 
 function initNavigation() {
     const navLinks = document.querySelectorAll('.nav-link, .dropdown-item');
@@ -429,13 +390,7 @@ function initNavigation() {
 }
 
 
-// ============================================
-// MOBILE MENU
-// ============================================
 
-// ============================================
-// VIDEO CONTROL - Auto-play/pause videos based on visibility
-// ============================================
 
 function initVideoControl() {
     const videos = document.querySelectorAll('video');
@@ -462,9 +417,7 @@ function initVideoControl() {
     });
 }
 
-// ============================================
-// HERO PARALLAX - Optimized
-// ============================================
+
 
 const hero = document.querySelector('.hero-content');
 const scrollIndicator = document.querySelector('.scroll-indicator');
@@ -490,9 +443,7 @@ window.addEventListener('scroll', () => {
     }
 }, { passive: true });
 
-// ============================================
-// MAGNETIC BUTTON EFFECT - Optimized
-// ============================================
+
 
 document.querySelectorAll('.hero-btn, .product-btn').forEach(btn => {
     let mouseTicking = false;
@@ -516,8 +467,4 @@ document.querySelectorAll('.hero-btn, .product-btn').forEach(btn => {
         });
     });
 
-// ============================================
-// SMOOTH SECTION TRANSITIONS
-// ============================================
 
-// Removed problematic scale transforms
